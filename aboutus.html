@@ -1,96 +1,205 @@
 <!DOCTYPE html>
-<html lang="id">
+<html lang="en">
+
 <head>
     <meta charset="UTF-8">
-    <title>About Our Game</title>
-    <link rel="stylesheet" href="style.css">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <style>
-        /* style.css */
-body {
-    background-color: #121212; /* Warna gelap khas game */
-    color: #e0e0e0;
-    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-    margin: 0;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    min-height: 100vh;
-}
+        /* Menggunakan font bergaya pixel jika ada, atau monospace sebagai cadangan */
+        body {
+            background-color: #2c1a12;
+            font-family: 'Courier New', Courier, monospace;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+            color: #4a2e19;
+        }
 
-.about-section {
-    text-align: center;
-    padding: 50px 20px;
-    background: rgba(255, 255, 255, 0.05); /* Efek transparan */
-    border-radius: 15px;
-    border: 1px solid #333;
-    max-width: 800px;
-}
+        .game-container {
+            width: 900px;
+            height: 550px;
+            background: #3d2b1f;
+            /* Warna kayu tua */
+            border: 8px solid #8b5a2b;
+            border-radius: 10px;
+            position: relative;
+            padding: 20px;
+        }
 
-h1 {
-    color: #ff9800; /* Warna aksen (misal: oranye api) */
-    text-transform: uppercase;
-    letter-spacing: 2px;
-}
+        .header-title {
+            text-align: center;
+            color: #f1c40f;
+            text-shadow: 2px 2px #000;
+            margin-bottom: 5px;
+        }
 
-.team-grid {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 20px;
-    margin-top: 30px;
-}
+        .sub-header {
+            text-align: center;
+            color: #ecf0f1;
+            font-size: 0.8em;
+            margin-top: 0;
+        }
 
-.member {
-    background: #1e1e1e;
-    padding: 15px;
-    border-bottom: 3px solid #ff9800;
-}
+        .content-wrapper {
+            display: flex;
+            gap: 20px;
+            margin-top: 20px;
+        }
 
-.btn-back {
-    display: inline-block;
-    margin-top: 40px;
-    padding: 10px 25px;
-    background-color: #ff9800;
-    color: #121212;
-    text-decoration: none;
-    font-weight: bold;
-    border-radius: 5px;
-    transition: 0.3s;
-}
+        .parchment {
+            background: #f3e5ab;
+            /* Warna kertas lama */
+            flex: 2;
+            padding: 20px;
+            border-radius: 5px;
+            box-shadow: inset 0 0 10px #d4a76a;
+            max-height: 350px;
+            overflow-y: auto;
+        }
 
-.btn-back:hover {
-    background-color: #e68a00;
-    transform: scale(1.05);
-}
+        .team-grid {
+            display: flex;
+            justify-content: space-around;
+            margin-top: 10px;
+        }
+
+        .pixel-avatar {
+            width: 60px;
+            height: 60px;
+            background: #8b5a2b;
+            border: 3px solid #4a2e19;
+        }
+
+        .real-photo-frame {
+            flex: 1;
+            background: #fff;
+            padding: 10px;
+            border: 5px solid #d4a76a;
+            transform: rotate(2deg);
+            /* Efek foto diletakkan miring */
+            text-align: center;
+            height: fit-content;
+        }
+
+        .photo-placeholder {
+            width: 100%;
+            height: 150px;
+            background: #ccc;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .bottom-menu {
+            position: absolute;
+            bottom: 20px;
+            left: 0;
+            width: 100%;
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+        }
+
+        button {
+            background: #4a2e19;
+            color: white;
+            border: 2px solid #f1c40f;
+            padding: 10px 20px;
+            cursor: pointer;
+        }
+
+        button.active {
+            background: #f1c40f;
+            color: #4a2e19;
+        }
     </style>
+    <title>Document</title>
 </head>
+
 <body>
+    <!DOCTYPE html>
+    <html lang="id">
 
-    <section class="about-section">
-        <div class="container">
-            <h1>Tentang Petualangan Kami</h1>
-            <p class="subtitle">Dibuat dengan semangat oleh para gamer untuk para gamer.</p>
-            
-            <div class="about-content">
-                <div class="game-info">
-                    <h2>Misi Kami</h2>
-                    <p>Kami percaya bahwa setiap piksel punya cerita. Game ini bermula dari sebuah ide sederhana di garasi dan kini tumbuh menjadi dunia yang luas untuk dijelajahi.</p>
-                </div>
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>About Us - 2D Game</title>
+        <link rel="stylesheet" href="style.css">
+    </head>
 
-                <div class="team-grid">
-                    <div class="member">
-                        <h3>Andi "The Coder"</h3>
-                        <p>Lead Developer & Math Wizard</p>
+    <body>
+
+        <div class="game-container">
+            <div class="about-window">
+                <h1 class="header-title">ABOUT US</h1>
+                <p class="sub-header">THE ADVENTURERS</p>
+
+                <div class="content-wrapper">
+                    <div class="parchment">
+                        <section>
+                            <h3>VISI & MISI</h3>
+                            <p>memberantas rasa bosan dan mengembangkan pikiran yang kreatif.</p>
+                        </section>
+
+                        <section class="team-section">
+                            <div class="team-grid">
+                                <div class="member">
+                                    <div class="pixel-avatar"></div>
+                                    <p><strong>Reisya Heryadi</strong><br>Lead Programmer</p>
+                                </div>
+
+                                <div class="member">
+                                    <div class="pixel-avatar"></div>
+                                    <p><strong>Diva Putra Utama</strong><br>Lead Artist</p>
+                                </div>
+
+                                <div class="member">
+                                    <div class="pixel-avatar"></div>
+                                    <p><strong>Raffi Putra Fahreza</strong><br>Writer</p>
+                                </div>
+
+                                <div class="member">
+                                    <div class="pixel-avatar"></div>
+                                    <p><strong>Lucky</strong><br>Sound Design</p>
+                                </div>
+
+                                <div class="member">
+                                    <div class="pixel-avatar"></div>
+                                    <p><strong>Silpa</strong><br>Marketing</p>
+                                </div>
+
+                                <div class="member">
+                                    <div class="pixel-avatar"></div>
+                                    <p><strong>Azkia</strong><br>Producer</p>
+                                </div>
+                            </div>
+                        </section>
+
+                        <section>
+                            <h3>KONTAK</h3>
+                            <p>Discord: discord.gg/Aethelgard</p>
+                        </section>
                     </div>
-                    <div class="member">
-                        <h3>Siti "The Artist"</h3>
-                        <p>Concept Artist & UI Designer</p>
+
+                    <div class="real-photo-frame">
+                        <div class="photo-placeholder">
+                            <p>Foto Asli Tim</p>
+                        </div>
+                        <p class="caption">The Real-Life Adventurers</p>
                     </div>
                 </div>
             </div>
-            
-            <a href="index.html" class="btn-back">Kembali ke Game</a>
-        </div>
-    </section>
 
+            <div class="bottom-menu">
+                <button>Back</button>
+            </div>
+        </div>
+
+    </body>
+
+    </html>
 </body>
+
 </html>
