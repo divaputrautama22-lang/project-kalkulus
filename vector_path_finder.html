@@ -67,23 +67,23 @@
 <div class="game-wrap">
   <h1>⚑ Vector Path Finder</h1>
   <div class="subtitle">Reach the Flag · 8 Arah Vektor</div>
-
+<!-- tombol mlih lvl -->
   <div class="level-btns" id="levelBtns">
     <button class="lvl-btn active" onclick="loadLevel(0)">Level 1</button>
     <button class="lvl-btn" onclick="loadLevel(1)">Level 2</button>
     <button class="lvl-btn" onclick="loadLevel(2)">Level 3</button>
   </div>
-
+<!-- meanmpilkan jumlah langkah yg dilakukan , kordinat bednera, dan posisi player secra real time-->
   <div class="top-bar">
     <div class="stat-box"><div class="label">Langkah</div><div class="value" id="stepCount">0</div></div>
     <div class="stat-box"><div class="label">Target</div><div class="value" id="targetPos">-</div></div>
     <div class="stat-box"><div class="label">Posisi</div><div class="value" id="currPos">-</div></div>
   </div>
-
+<!-- menampilkan arena -->
   <div class="arena">
     <div class="grid-wrap"><canvas id="gameCanvas"></canvas></div>
   </div>
-
+<!-- menampilkan tombol pergerakan -->
   <div class="vector-panel">
     <h3>Pilih Vektor Gerakan — 8 Arah</h3>
     <div class="btn-grid">
@@ -106,18 +106,18 @@
     <button class="ctrl-btn btn-redo" id="btnRedo" onclick="redoMove()" disabled>↪ Redo</button>
     <button class="ctrl-btn btn-reset" onclick="resetLevel()">↺ Reset</button>
   </div>
-
+<!-- menampilkan riwayat pergerakan -->
   <div class="history-panel">
     <div class="hist-label">RIWAYAT VEKTOR</div>
     <div class="hist-items" id="histItems"><span style="color:#bbb;font-size:11px">Belum ada gerakan...</span></div>
   </div>
-
+<!-- meampilkan hasir vektor -->
   <div style="background:rgba(255,255,255,.85);border-radius:10px;padding:8px 12px;font-size:11px;color:#555;border:1px solid #ddd">
     <div class="info-row"><span>Vektor = besaran dengan <strong>arah</strong> dan <strong>magnitude</strong></span></div>
     <div class="info-row"><span id="vecFormula" style="font-family:monospace;color:#2d5a1b;font-size:12px">P_baru = P_lama + v⃗</span></div>
   </div>
 </div>
-
+<!-- pesan menang -->
 <div class="msg-overlay" id="msgOverlay">
   <div class="msg-box">
     <div style="font-size:40px;margin-bottom:8px" id="msgEmoji">🎉</div>
@@ -129,12 +129,12 @@
 
 <script>
 const COLS = 8, ROWS = 8, WALL = 1, FLAG = 2;
-
+// Level, posisi awal player, posisi bendera, dan posisi rintangan, pergerakan minimal utk B3
 const LEVELS = [
   {
     name: "Level 1",
     grid: () => Array.from({length: ROWS}, () => Array(COLS).fill(0)),
-    start: [0, 7], flag: [7, 0], target: "(7,0)", minSteps: 2
+    start: [0, 7], flag: [7, 0], target: "(7,0)", minSteps: 7
   },
   {
     name: "Level 2",
@@ -143,7 +143,7 @@ const LEVELS = [
       [[2,1],[2,2],[2,3],[2,4],[5,3],[5,4],[5,5],[5,6],[3,6],[4,6],[1,5],[1,6]].forEach(([c,r]) => g[r][c] = 1);
       return g;
     },
-    start: [0, 7], flag: [7, 0], target: "(7,0)", minSteps: 4
+    start: [0, 7], flag: [7, 0], target: "(7,0)", minSteps: 8
   },
   {
     name: "Level 3",
@@ -152,12 +152,12 @@ const LEVELS = [
       [[1,0],[1,1],[1,2],[3,2],[3,3],[3,4],[5,4],[5,5],[5,6],[6,1],[6,2],[7,2],[2,6],[4,0],[4,1]].forEach(([c,r]) => g[r][c] = 1);
       return g;
     },
-    start: [0, 7], flag: [7, 0], target: "(7,0)", minSteps: 5
+    start: [0, 7], flag: [7, 0], target: "(7,0)", minSteps: 9
   }
 ];
 
 let cv, ctx, currentLevel = 0, grid = [], playerPos = [], flagPos = [], steps = 0, history = [], future = [];
-
+// gambar arena keseluruhan
 function initCanvas() {
   cv = document.getElementById('gameCanvas');
   ctx = cv.getContext('2d');
@@ -187,7 +187,7 @@ function updateUI() {
   document.getElementById('btnRedo').disabled = future.length === 0;
   updateHistory();
 }
-
+// riwayat lagnkah
 function updateHistory() {
   const el = document.getElementById('histItems');
   if (!history.length) { el.innerHTML = '<span style="color:#bbb;font-size:11px">Belum ada gerakan...</span>'; return; }
@@ -201,7 +201,7 @@ function draw() {
   const s = cs();
   ctx.clearRect(0, 0, cv.width, cv.height);
 
-  // Draw grass tiles
+  // Gambar ubin rumput
   for (let r = 0; r < ROWS; r++) {
     for (let c = 0; c < COLS; c++) {
       ctx.fillStyle = (c + r) % 2 === 0 ? '#4a7c59' : '#528f63';
@@ -211,12 +211,12 @@ function draw() {
     }
   }
 
-  // Draw walls
+  // tembok
   for (let r = 0; r < ROWS; r++)
     for (let c = 0; c < COLS; c++)
       if (grid[r][c] === WALL) drawWall(c, r, s);
 
-  // Draw path trail
+  // Menggambar jejak pergerakan
   history.forEach((h, i) => {
     const a = 0.12 + 0.18 * (i / Math.max(1, history.length - 1));
     ctx.fillStyle = `rgba(255,220,80,${a})`;
@@ -238,7 +238,7 @@ function draw() {
   drawPlayer(playerPos[0], playerPos[1], s);
   drawCoords(s);
 }
-
+// Menggambar tembok
 function drawWall(c, r, s) {
   const x = c * s, y = r * s;
   ctx.fillStyle = '#7a6040'; ctx.fillRect(x + 1, y + 1, s - 2, s - 2);
@@ -246,8 +246,8 @@ function drawWall(c, r, s) {
   ctx.fillStyle = '#5a4020'; ctx.fillRect(x + s - 5, y + 2, 3, s - 4);
   ctx.strokeStyle = 'rgba(0,0,0,.2)'; ctx.lineWidth = 1;
   ctx.strokeRect(x + 1, y + 1, s - 2, s - 2);
-}
-
+} 
+// Menggambar bendera tujuan
 function drawFlag(c, r, s) {
   const x = c * s + s / 2, y = r * s;
   ctx.fillStyle = '#8B4513'; ctx.fillRect(x - 2, y + 4, 4, s - 8);
@@ -255,7 +255,7 @@ function drawFlag(c, r, s) {
   ctx.fillStyle = '#e74c3c'; ctx.shadowColor = 'rgba(231,76,60,.5)'; ctx.shadowBlur = 8;
   ctx.fill(); ctx.shadowBlur = 0;
 }
-
+// fungsi menampilkan pemain
 function drawPlayer(c, r, s) {
   const x = c * s, y = r * s, px = x + s / 2, py = y + s * .62;
   ctx.save();
@@ -268,7 +268,7 @@ function drawPlayer(c, r, s) {
   ctx.fillStyle = '#c49a6e'; ctx.beginPath(); ctx.arc(px, py - s * .44, s * .18, Math.PI, 0); ctx.fill();
   ctx.shadowBlur = 0; ctx.restore();
 }
-
+// fungsi menampilkan koordint
 function drawCoords(s) {
   ctx.fillStyle = 'rgba(255,255,255,.55)';
   ctx.font = `bold ${Math.max(8, s * .18)}px Nunito`;
@@ -277,7 +277,7 @@ function drawCoords(s) {
   ctx.textAlign = 'left';
   for (let r = 0; r < ROWS; r++) ctx.fillText(ROWS - 1 - r, 2, r * s + s * .55);
 }
-
+// fungsi agar karakter bisa gerak
 function move(dx, dy) {
   const nx = playerPos[0] + dx, ny = playerPos[1] - dy;
   if (nx < 0 || nx >= COLS || ny < 0 || ny >= ROWS) { flash('#e74c3c'); return; }
@@ -301,7 +301,7 @@ function flash(color) {
   ctx.fillStyle = color + '55'; ctx.fillRect(0, 0, cv.width, cv.height);
   setTimeout(draw, 150);
 }
-
+// membalikan pergerakan sebelumnya atau undo
 function undoMove() {
   if (!history.length) return;
   const last = history.pop();
@@ -310,7 +310,7 @@ function undoMove() {
   steps = Math.max(0, steps - 1);
   updateUI(); draw();
 }
-
+// membalikan pergerakan setelah atau redo
 function redoMove() {
   if (!future.length) return;
   const next = future.pop();
@@ -321,8 +321,8 @@ function redoMove() {
 }
 
 function resetLevel() { future = []; loadLevel(currentLevel); }
-
-function showWin() {
+// skor hasil berdasarakan jumlah pergerakan
+function showWin() {  
   const mn = LEVELS[currentLevel].minSteps;
   const rating = steps <= mn ? '⭐⭐⭐ Sempurna!' : steps <= mn + 2 ? '⭐⭐ Bagus!' : '⭐ Berhasil!';
   document.getElementById('msgEmoji').textContent = '🎉';
@@ -331,19 +331,20 @@ function showWin() {
   document.getElementById('msgBtn').textContent = currentLevel < LEVELS.length - 1 ? 'Level Berikutnya ↗' : 'Main Lagi ↺';
   document.getElementById('msgOverlay').classList.add('show');
 }
-
+// Pesan level selanjutnya
 function nextLevel() {
+  gamelock = false;
   document.getElementById('msgOverlay').classList.remove('show');
   loadLevel(currentLevel < LEVELS.length - 1 ? currentLevel + 1 : 0);
 }
-
+// Movement dengan keyboard 
 window.addEventListener('keydown', e => {
   const map = {
-    'ArrowRight': [1, 0], 'ArrowLeft': [-1, 0], 'ArrowUp': [0, 1], 'ArrowDown': [0, -1],
+    'd': [1, 0], 'a': [-1, 0], 'w': [0, 1], 'x': [0, -1],
     'q': [-1, 1], 'Q': [-1, 1],
     'e': [1, 1],  'E': [1, 1],
     'z': [-1, -1],'Z': [-1, -1],
-    'x': [1, -1], 'X': [1, -1]
+    'c': [1, -1], 'X': [1, -1]
   };
   if (map[e.key]) { e.preventDefault(); move(...map[e.key]); }
   if (e.ctrlKey && e.key === 'z') { e.preventDefault(); undoMove(); }
